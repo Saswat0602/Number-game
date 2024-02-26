@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import {
   TextInput,
   View,
@@ -10,17 +10,21 @@ import {
 } from 'react-native';
 
 import PrimaryButton from '../components/ui/PrimaryButton';
-import Title from '../components/ui/Title';
+import Title from '../components/ui/Title.android';
 import Colors from '../Constants/colors';
 import Card from '../components/ui/Card';
 import InstructionText from '../components/ui/InstructionText';
 
-function StartGameScreen({ onPickNumber }) {
-  const [enteredNumber, setEnteredNumber] = useState('');
+interface StartGameScreenProps {
+  onPickNumber: (number: number) => void;
+}
+
+function StartGameScreen({ onPickNumber }: StartGameScreenProps) {
+  const [enteredNumber, setEnteredNumber] = useState<any>('');
 
   const { width, height } = useWindowDimensions();
 
-  function numberInputHandler(enteredText) {
+  function numberInputHandler(enteredText: string) {
     setEnteredNumber(enteredText);
   }
 
@@ -80,15 +84,12 @@ function StartGameScreen({ onPickNumber }) {
 
 export default StartGameScreen;
 
-// const deviceHeight = Dimensions.get('window').height;
-
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
   },
   rootContainer: {
     flex: 1,
-    // marginTop: deviceHeight < 380 ? 30 : 100,
     alignItems: 'center',
   },
   numberInput: {

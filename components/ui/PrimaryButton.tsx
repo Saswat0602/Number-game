@@ -1,12 +1,22 @@
-import { View, Text, Pressable, StyleSheet } from 'react-native';
+import * as React from 'react';
+import { View, Text, Pressable, StyleSheet, StyleProp, ViewStyle } from 'react-native';
 
-function PrimaryButton({ children }) {
+interface PrimaryButtonProps {
+  children:any;
+  onPress?: () => void;
+  style?: StyleProp<ViewStyle>;
+}
+
+const PrimaryButton: React.FC<PrimaryButtonProps> = ({ children, onPress, style }) => {
   function pressHandler() {
     console.log('Pressed!');
+    if (onPress) {
+      onPress();
+    }
   }
 
   return (
-    <View style={styles.buttonOuterContainer}>
+    <View style={[styles.buttonOuterContainer, style]}>
       <Pressable
         style={({ pressed }) =>
           pressed

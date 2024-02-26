@@ -1,3 +1,4 @@
+import React from 'react';
 import {
   View,
   Image,
@@ -11,7 +12,17 @@ import Title from '../components/ui/Title';
 import PrimaryButton from '../components/ui/PrimaryButton';
 import Colors from '../Constants/colors';
 
-function GameOverScreen({ roundsNumber, userNumber, onStartNewGame }) {
+interface GameOverScreenProps {
+  roundsNumber: number;
+  userNumber: number;
+  onStartNewGame: () => void;
+}
+
+const GameOverScreen: React.FC<GameOverScreenProps> = ({
+  roundsNumber,
+  userNumber,
+  onStartNewGame,
+}) => {
   const { width, height } = useWindowDimensions();
 
   let imageSize = 300;
@@ -41,23 +52,21 @@ function GameOverScreen({ roundsNumber, userNumber, onStartNewGame }) {
           />
         </View>
         <Text style={styles.summaryText}>
-          Your phone needed <Text style={styles.highlight}>{roundsNumber}</Text>{' '}
-          rounds to guess the number{' '}
-          <Text style={styles.highlight}>{userNumber}</Text>.
+          Your phone needed{' '}
+          <Text style={styles.highlight}>{roundsNumber}</Text> rounds to guess
+          the number <Text style={styles.highlight}>{userNumber}</Text>.
         </Text>
         <PrimaryButton onPress={onStartNewGame}>Start New Game</PrimaryButton>
       </View>
     </ScrollView>
   );
-}
+};
 
 export default GameOverScreen;
 
-// const deviceWidth = Dimensions.get('window').width;
-
 const styles = StyleSheet.create({
   screen: {
-    flex: 1
+    flex: 1,
   },
   rootContainer: {
     flex: 1,
@@ -66,9 +75,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   imageContainer: {
-    // width: deviceWidth < 380 ? 150 : 300,
-    // height: deviceWidth < 380 ? 150 : 300,
-    // borderRadius: deviceWidth < 380 ? 75 : 150,
     borderWidth: 3,
     borderColor: Colors.primary800,
     overflow: 'hidden',

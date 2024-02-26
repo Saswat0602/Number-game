@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   StyleSheet,
@@ -12,10 +12,15 @@ import NumberContainer from '../components/game/NumberContainer';
 import Card from '../components/ui/Card';
 import InstructionText from '../components/ui/InstructionText';
 import PrimaryButton from '../components/ui/PrimaryButton';
-import Title from '../components/ui/Title';
+import Title from '../components/ui/Title.android';
 import GuessLogItem from '../components/game/GuessLogItem';
 
-function generateRandomBetween(min, max, exclude) {
+interface GameScreenProps {
+  userNumber: number;
+  onGameOver: (rounds: number) => void;
+}
+
+function generateRandomBetween(min: number, max: number, exclude: number): number {
   const rndNum = Math.floor(Math.random() * (max - min)) + min;
 
   if (rndNum === exclude) {
@@ -28,10 +33,10 @@ function generateRandomBetween(min, max, exclude) {
 let minBoundary = 1;
 let maxBoundary = 100;
 
-function GameScreen({ userNumber, onGameOver }) {
+const GameScreen: React.FC<GameScreenProps> = ({ userNumber, onGameOver }) => {
   const initialGuess = generateRandomBetween(1, 100, userNumber);
-  const [currentGuess, setCurrentGuess] = useState(initialGuess);
-  const [guessRounds, setGuessRounds] = useState([initialGuess]);
+  const [currentGuess, setCurrentGuess] = useState<number>(initialGuess);
+  const [guessRounds, setGuessRounds] = useState<number[]>([initialGuess]);
   const { width, height } = useWindowDimensions();
 
   useEffect(() => {
@@ -45,8 +50,7 @@ function GameScreen({ userNumber, onGameOver }) {
     maxBoundary = 100;
   }, []);
 
-  function nextGuessHandler(direction) {
-    // direction => 'lower', 'greater'
+  function nextGuessHandler(direction: 'lower' | 'greater'): void {
     if (
       (direction === 'lower' && currentGuess < userNumber) ||
       (direction === 'greater' && currentGuess > userNumber)
@@ -83,12 +87,12 @@ function GameScreen({ userNumber, onGameOver }) {
         </InstructionText>
         <View style={styles.buttonsContainer}>
           <View style={styles.buttonContainer}>
-            <PrimaryButton onPress={nextGuessHandler.bind(this, 'lower')}>
+            <PrimaryButton onPress={() => nextGuessHandler('lower')}>
               <Ionicons name="md-remove" size={24} color="white" />
             </PrimaryButton>
           </View>
           <View style={styles.buttonContainer}>
-            <PrimaryButton onPress={nextGuessHandler.bind(this, 'greater')}>
+            <PrimaryButton onPress={() => nextGuessHandler('greater')}>
               <Ionicons name="md-add" size={24} color="white" />
             </PrimaryButton>
           </View>
@@ -102,13 +106,13 @@ function GameScreen({ userNumber, onGameOver }) {
       <>
         <View style={styles.buttonsContainerWide}>
           <View style={styles.buttonContainer}>
-            <PrimaryButton onPress={nextGuessHandler.bind(this, 'lower')}>
+            <PrimaryButton onPress={() => nextGuessHandler('lower')}>
               <Ionicons name="md-remove" size={24} color="white" />
             </PrimaryButton>
           </View>
           <NumberContainer>{currentGuess}</NumberContainer>
           <View style={styles.buttonContainer}>
-            <PrimaryButton onPress={nextGuessHandler.bind(this, 'greater')}>
+            <PrimaryButton onPress={() => nextGuessHandler('greater')}>
               <Ionicons name="md-add" size={24} color="white" />
             </PrimaryButton>
           </View>
@@ -122,7 +126,6 @@ function GameScreen({ userNumber, onGameOver }) {
       <Title>Opponent's Guess</Title>
       {content}
       <View style={styles.listContainer}>
-        {/* {guessRounds.map(guessRound => <Text key={guessRound}>{guessRound}</Text>)} */}
         <FlatList
           data={guessRounds}
           renderItem={(itemData) => (
@@ -131,12 +134,12 @@ function GameScreen({ userNumber, onGameOver }) {
               guess={itemData.item}
             />
           )}
-          keyExtractor={(item) => item}
+          keyExtractor={(item) => item.toString()}
         />
       </View>
     </View>
   );
-}
+};
 
 export default GameScreen;
 
